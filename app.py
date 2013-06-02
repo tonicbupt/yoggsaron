@@ -8,7 +8,6 @@ from flask import Flask, redirect, url_for
 from sheep.api.sessions import SessionMiddleware, FilesystemSessionStore
 
 from models import init_db
-from views.api import api
 
 logger = logging.getLogger(__name__)
 
