@@ -1,11 +1,14 @@
 # -*- coding:utf-8 -*-
+from sheep.api.cache import cache, backend
+
 from models import db
 from models.base import BaseTopic
 from models.mixin.comment import CommentMixin
 
+_TOPIC_KEY = 'topic:%s'
+
 class Topic(db.Model, BaseTopic, CommentMixin):
     __tablename__ = 'topic'
-    _CACHE_KEY = 'topic:%s'
     type = 'topic'
 
     def __init__(self, author, text, tags):
@@ -20,10 +23,21 @@ class Topic(db.Model, BaseTopic, CommentMixin):
         db.session.commit()
         return t
 
+    @classmethod
+    @cache(_TOPIC_KEY % '{id}')
+    def get(cls, id):
+        return cls.query.get(id)
+
+    @classmethod
+    def gets(cls, ids):
+        return [cls.get(i) for i in ids]
+
     def delete(self, user_id):
         if user_id != self.author:
             return
         db.session.delete(self)
         db.session.commit()
-        self._flush_cache()
+        _flush_topic(self.id)
 
+def _flush_topic(id):
+    backend.delete(_TOPIC_KEY % id)

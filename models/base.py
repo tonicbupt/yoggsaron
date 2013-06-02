@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
 from datetime import datetime
 from models import db
-from models.mixin import BaseObjectMixin
 
-class BaseObject(BaseObjectMixin):
+class BaseObject(object):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column('name', db.String(255), nullable=False, index=True)
     desc = db.Column('desc', db.Text, nullable=True)
@@ -14,7 +13,7 @@ class BaseObject(BaseObjectMixin):
     like = db.Column('like', db.Integer, default=0, index=True)
     hate = db.Column('hate', db.Integer, default=0, index=True)
 
-class BaseTopic(BaseObjectMixin):
+class BaseTopic(object):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     author = db.Column('author', db.Integer, nullable=False, index=True)
     text = db.Column('text', db.Text, nullable=False)
