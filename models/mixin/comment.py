@@ -17,7 +17,7 @@ class CommentMixin(object):
                 text, ref_id=ref_id, privacy=privacy)
 
     @service_exception
-    def remove_comment(self, author, cid):
+    def del_comment(self, author, cid):
         return comment_service.del_comment(author, cid)
 
     @service_exception

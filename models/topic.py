@@ -3,7 +3,9 @@ from sheep.api.cache import cache, backend
 
 from models import db
 from models.base import BaseTopic
+from models.like import LikeItem
 from models.mixin.comment import CommentMixin
+from models.consts import KIND_TOPIC
 
 _TOPIC_KEY = 'topic:%s'
 
@@ -36,6 +38,20 @@ class Topic(db.Model, BaseTopic, CommentMixin):
         if user_id != self.author:
             return
         db.session.delete(self)
+        db.session.commit()
+        _flush_topic(self.id)
+
+    def add_like(self, user_id):
+        LikeItem.add_like(user_id, self.id, KIND_TOPIC)
+        self.like += 1
+        db.session.add(self)
+        db.session.commit()
+        _flush_topic(self.id)
+
+    def add_dislike(self, user_id):
+        LikeItem.add_dislike(user_id, self.id, KIND_TOPIC)
+        self.dislike += 1
+        db.session.add(self)
         db.session.commit()
         _flush_topic(self.id)
 
