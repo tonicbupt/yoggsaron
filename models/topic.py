@@ -11,7 +11,7 @@ _TOPIC_KEY = 'topic:%s'
 
 class Topic(db.Model, BaseTopic, CommentMixin):
     __tablename__ = 'topic'
-    type = 'topic'
+    comment_type = 'topic'
 
     def __init__(self, author, text, tags):
         self.author = author
